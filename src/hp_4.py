@@ -30,38 +30,29 @@ def add_date_range(values, start_date):
 
 def fees_report(infile, outfile):
    late_fees = defaultdict(float)
-    
-    # ... (existing code to read data from the input file)
 
-    # Logic to calculate late fees
-   for row in reader:
-      if 'return_date' in row:
-         patron_id = row['patron_id']
-         return_date = row['return_date']
+    # Open the input file and create a reader object
+    with open(infile, 'r') as file:
+        reader = DictReader(file)
 
-            # Calculate late fees logic goes here based on return_date
+        # Logic to read data and calculate late fees
+        for row in reader:
+            if 'return_date' in row:
+                patron_id = row['patron_id']
+                return_date = row['return_date']
+                
+                # Add your logic here to calculate late fees based on return_date
+                # For example:
+                # Calculate days late based on return_date
+                # Calculate late fee based on days late
 
-            # For example: 
-            # Calculate days late based on return_date
-            # Calculate late fee based on days late
+                # Update late fees dictionary
+                late_fees[patron_id] += calculated_late_fee  # Update this according to your logic
 
-            # Update late fees dictionary
-      late_fees[patron_id] += calculated_late_fee  # Update this according to your logic
-    
-    # Writing late fee information to the output file
-      with open(outfile, 'w') as output_file:
-         writer = DictWriter(output_file, fieldnames=['patron_id', 'late_fee'])
-         writer.writeheader()
-        
-        # Write late fee information to the output file
-         for patron_id, late_fee in late_fees.items():
-            writer.writerow({'patron_id': patron_id, 'late_fee': late_fee})
-# The following main selection block will only run when you choose
-# "Run -> Module" in IDLE.  Use this section to run test code.  The
-# template code below tests the fees_report function.
-#
-# Use the get_data_file_path function to get the full path of any file
-# under the data directory.
+    # Write late fee information to the output file
+    with open(outfile, 'w') as output_file:
+        for patron_id, late_fee in late_fees.items():
+            output_file.write(f"{patron_id}, {late_fee}\n")
 
 if __name__ == '__main__':
     
