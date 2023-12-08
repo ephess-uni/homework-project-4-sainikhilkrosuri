@@ -34,10 +34,10 @@ def fees_report(infile, outfile):
     # ... (existing code to read data from the input file)
 
     # Logic to calculate late fees
-    for row in reader:
-        if 'return_date' in row:
-            patron_id = row['patron_id']
-            return_date = row['return_date']
+   for row in reader:
+      if 'return_date' in row:
+         patron_id = row['patron_id']
+         return_date = row['return_date']
 
             # Calculate late fees logic goes here based on return_date
 
@@ -49,12 +49,12 @@ def fees_report(infile, outfile):
             late_fees[patron_id] += calculated_late_fee  # Update this according to your logic
     
     # Writing late fee information to the output file
-    with open(outfile, 'w') as output_file:
-        writer = DictWriter(output_file, fieldnames=['patron_id', 'late_fee'])
-        writer.writeheader()
+      with open(outfile, 'w') as output_file:
+         writer = DictWriter(output_file, fieldnames=['patron_id', 'late_fee'])
+         writer.writeheader()
         
         # Write late fee information to the output file
-        for patron_id, late_fee in late_fees.items():
+         for patron_id, late_fee in late_fees.items():
             writer.writerow({'patron_id': patron_id, 'late_fee': late_fee})
 # The following main selection block will only run when you choose
 # "Run -> Module" in IDLE.  Use this section to run test code.  The
