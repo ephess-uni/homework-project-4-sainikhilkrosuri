@@ -40,6 +40,7 @@ def fees_report(infile, outfile):
    with open(outfile, 'w') as output_file:
       for patron_id, late_fee in late_fees.items():
          output_file.write(f"{patron_id}, {late_fee}\n")
+   return output_file
 
 if __name__ == '__main__':
     
