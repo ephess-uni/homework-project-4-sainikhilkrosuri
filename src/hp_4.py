@@ -30,12 +30,12 @@ def add_date_range(values, start_date):
 
 def fees_report(infile, outfile):
    late_fees = defaultdict(float)
-    with open(infile, 'r') as file:
-        reader = DictReader(file)
-        for row in reader:
-            if 'return_date' in row:
-                patron_id = row['patron_id']
-                return_date = row['return_date']
+   with open(infile, 'r') as file:
+      reader = DictReader(file)
+      for row in reader:
+         if 'return_date' in row:
+            patron_id = row['patron_id']
+            return_date = row['return_date']
 
 # The following main selection block will only run when you choose
 # "Run -> Module" in IDLE.  Use this section to run test code.  The
