@@ -46,7 +46,7 @@ def fees_report(infile, outfile):
             # Calculate late fee based on days late
 
             # Update late fees dictionary
-            late_fees[patron_id] += calculated_late_fee  # Update this according to your logic
+      late_fees[patron_id] += calculated_late_fee  # Update this according to your logic
     
     # Writing late fee information to the output file
       with open(outfile, 'w') as output_file:
