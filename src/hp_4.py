@@ -40,7 +40,6 @@ def fees_report(infile, outfile):
    with open(outfile, 'w') as output_file:
       for patron_id, late_fee in late_fees.items():
          output_file.write(f"{patron_id}, {late_fee}\n")
-      return output_file   
 
 if __name__ == '__main__':
     
@@ -55,7 +54,10 @@ if __name__ == '__main__':
     OUTFILE = 'book_fees.csv'
 
     fees_report(BOOK_RETURNS_PATH, OUTFILE)
+   with open(outfile, 'r') as output_file:
+      file_content = output_file.read()
+      return file_content
 
     # Print the data written to the outfile
-    with open(OUTFILE) as f:
-        print(f.read())
+    #with open(OUTFILE) as f:
+        #print(f.read())
