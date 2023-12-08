@@ -35,7 +35,7 @@ def fees_report(infile, outfile):
       for row in reader:
          if 'return_date' in row:
             patron_id = row['patron_id']
-            return_date = datetime.strptime(row['return_date'],
+            return_date = datetime.strptime(row['return_date'], '%Y-%m-%d')
             late_fees[patron_id] = calculated_late_fee
    with open(outfile, 'w') as output_file:
       for patron_id, late_fee in late_fees.items():
