@@ -46,9 +46,9 @@ def fees_report(infile, outfile):
       late_fees_list = []
       for key, value in late_fees_dict.items():
          late_fees_list.append({'patron_id': key, 'late_fees': "{:.2f}".format(value)})
-         writer = DictWriter(file, cols)
-         writer.writeheader()
-         writer.writerows(late_fees_list)
+      writer = DictWriter(file, cols)
+      writer.writeheader()
+      writer.writerows(late_fees_list)
 
 if __name__ == '__main__':
     
