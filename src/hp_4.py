@@ -30,29 +30,16 @@ def add_date_range(values, start_date):
 
 def fees_report(infile, outfile):
    late_fees = defaultdict(float)
-
-    # Open the input file and create a reader object
-    with open(infile, 'r') as file:
-        reader = DictReader(file)
-
-        # Logic to read data and calculate late fees
-        for row in reader:
-            if 'return_date' in row:
-                patron_id = row['patron_id']
-                return_date = row['return_date']
-
-                # Add your logic here to calculate late fees based on return_date
-                # For example:
-                # Calculate days late based on return_date
-                # Calculate late fee based on days late
-
-                # Update late fees dictionary
-                late_fees[patron_id] += calculated_late_fee  # Update this according to your logic
-
-    # Write late fee information to the output file
-    with open(outfile, 'w') as output_file:
-        for patron_id, late_fee in late_fees.items():
-            output_file.write(f"{patron_id}, {late_fee}\n")
+   with open(infile, 'r') as file:
+      reader = DictReader(file)
+      for row in reader:
+         if 'return_date' in row:
+            patron_id = row['patron_id']
+            return_date = row['return_date']
+            late_fees[patron_id] += calculated_late_fee
+   with open(outfile, 'w') as output_file:
+      for patron_id, late_fee in late_fees.items():
+         output_file.write(f"{patron_id}, {late_fee}\n")
 
 if __name__ == '__main__':
     
