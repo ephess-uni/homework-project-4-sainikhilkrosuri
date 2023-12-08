@@ -29,26 +29,41 @@ def add_date_range(values, start_date):
 
 
 def fees_report(infile, outfile):
-   late_fees = {}
+   late_fees_dict = defaultdict(float)
    with open(infile, 'r') as file:
       reader = DictReader(file)
       for row in reader:
-         if 'return_date' in row:
-            patron_id = row['patron_id']
-            return_date = datetime.strptime(row['return_date'], '%Y-%m-%d')
-            late_fees[patron_id] = calculated_late_fee
-   with open(outfile, 'w') as output_file:
-      for patron_id, late_fee in late_fees.items():
-         output_file.write(f"{patron_id}, {late_fee}\n")
-   with open(outfile, 'r') as output_file:
-      file_content = output_file.read()
-   return file_content
+         date_due = datetime.strptime(row['date_due'], "%m/%d/%Y")
+         date_returned = datetime.strptime(row['date_returned'], "%m/%d/%Y")
+         if date_returned > date_due:
+            days_late = (date_returned - date_due).days
+            late_fee = round(days_late * 0.25, 2)
+            late_fees_dict[row['patron_id']] += late_fee
+         else:
+            late_fees_dict[row['patron_id']] = 0.00
+   with open(outfile, 'w', newline='') as file:
+      cols = ['patron_id', 'late_fees']
+      late_fees_list = []
+      for key, value in late_fees_dict.items():
+         late_fees_list.append({'patron_id': key, 'late_fees': "{:.2f}".format(value)})
+         writer = DictWriter(file, cols)
+         writer.writeheader()
+         writer.writerows(late_fees_list)
 
 if __name__ == '__main__':
-   BOOK_RETURNS_PATH = get_data_file_path('book_returns_short.csv')
-   OUTFILE = 'book_fees.csv'
-   fees_report(BOOK_RETURNS_PATH, OUTFILE)
+    
+    try:
+        from src.util import get_data_file_path
+    except ImportError:
+        from util import get_data_file_path
+
+    # BOOK_RETURNS_PATH = get_data_file_path('book_returns.csv')
+    BOOK_RETURNS_PATH = get_data_file_path('book_returns_short.csv')
+
+    OUTFILE = 'book_fees.csv'
+
+    fees_report(BOOK_RETURNS_PATH, OUTFILE)
 
     # Print the data written to the outfile
-    #with open(OUTFILE) as f:
-        #print(f.read())
+    with open(OUTFILE) as f:
+        print(f.read())
