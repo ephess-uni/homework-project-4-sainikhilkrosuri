@@ -55,7 +55,7 @@ OUTFILE = 'book_fees.csv'
 fees_report(BOOK_RETURNS_PATH, OUTFILE)
 with open(outfile, 'r') as output_file:
    file_content = output_file.read()
-   return file_content
+return file_content
 
     # Print the data written to the outfile
     #with open(OUTFILE) as f:
