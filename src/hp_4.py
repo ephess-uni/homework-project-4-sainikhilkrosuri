@@ -6,29 +6,56 @@ from collections import defaultdict
 
 
 def reformat_dates(old_dates):
-    """Accepts a list of date strings in format yyyy-mm-dd, re-formats each
-    element to a format dd mmm yyyy--01 Jan 2001."""
-    pass
+   new_dates = []
+    for date_str in old_dates:
+        date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+        new_format = date_obj.strftime('%d %b %Y--%d %b %Y')
+        new_dates.append(new_format)
+    return new_dates
 
 
 def date_range(start, n):
-    """For input date string `start`, with format 'yyyy-mm-dd', returns
-    a list of of `n` datetime objects starting at `start` where each
-    element in the list is one day after the previous."""
-    pass
+    start_date = datetime.strptime(start, '%Y-%m-%d')
+    return [start_date + timedelta(days=i) for i in range(n)]
 
 
 def add_date_range(values, start_date):
-    """Adds a daily date range to the list `values` beginning with
-    `start_date`.  The date, value pairs are returned as tuples
-    in the returned list."""
-    pass
+    date_values = []
+    for value in values:
+        date_values.append((start_date, value))
+        start_date += timedelta(days=1)
+    return date_values
 
 
 def fees_report(infile, outfile):
-    """Calculates late fees per patron id and writes a summary report to
-    outfile."""
-    pass
+    # Define a dictionary to store late fees per patron ID
+    late_fees = defaultdict(float)
+
+    # Read the input CSV file using DictReader
+    with open(infile, 'r') as file:
+        reader = DictReader(file)
+        for row in reader:
+            patron_id = row['patron_id']
+            return_date = row['return_date']
+            due_date = row['due_date']
+
+            # Calculate late fees if the book is returned after the due date
+            if return_date > due_date:
+                # Calculate days late and charge a fee of $0.50 per day
+                days_late = (datetime.strptime(return_date, '%Y-%m-%d') - datetime.strptime(due_date, '%Y-%m-%d')).days
+                late_fee = days_late * 0.50
+                late_fees[patron_id] += late_fee
+
+    # Write the summary report to the output file using DictWriter
+    with open(outfile, 'w', newline='') as output_file:
+        fieldnames = ['patron_id', 'late_fee']
+        writer = DictWriter(output_file, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for patron_id, fee in late_fees.items():
+            writer.writerow({'patron_id': patron_id, 'late_fee': fee})
+
+# The rest of your code remains unchanged
 
 
 # The following main selection block will only run when you choose
