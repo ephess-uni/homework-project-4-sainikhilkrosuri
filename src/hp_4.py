@@ -7,11 +7,11 @@ from collections import defaultdict
 
 def reformat_dates(old_dates):
    new_dates = []
-    for date_str in old_dates:
-        date_obj = datetime.strptime(date_str, '%Y-%m-%d')
-        new_format = date_obj.strftime('%d %b %Y--%d %b %Y')
-        new_dates.append(new_format)
-    return new_dates
+   for date_str in old_dates:
+      date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+      new_format = date_obj.strftime('%d %b %Y--%d %b %Y')
+      new_dates.append(new_format)
+   return new_dates
 
 
 def date_range(start, n):
