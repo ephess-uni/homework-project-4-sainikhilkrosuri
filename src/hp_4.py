@@ -41,21 +41,13 @@ def fees_report(infile, outfile):
       for patron_id, late_fee in late_fees.items():
          output_file.write(f"{patron_id}, {late_fee}\n")
 
-'''if __name__ == '__main__':
-    
-    try:
-        from src.util import get_data_file_path
-    except ImportError:
-        from util import get_data_file_path
-
-    # BOOK_RETURNS_PATH = get_data_file_path('book_returns.csv')'''
-BOOK_RETURNS_PATH = get_data_file_path('book_returns_short.csv')
-OUTFILE = 'book_fees.csv'
-
-fees_report(BOOK_RETURNS_PATH, OUTFILE)
-with open(outfile, 'r') as output_file:
-   file_content = output_file.read()
-return file_content
+if __name__ == '__main__':
+   BOOK_RETURNS_PATH = get_data_file_path('book_returns_short.csv')
+   OUTFILE = 'book_fees.csv'
+   fees_report(BOOK_RETURNS_PATH, OUTFILE)
+   with open(outfile, 'r') as output_file:
+      file_content = output_file.read()
+      return file_content
 
     # Print the data written to the outfile
     #with open(OUTFILE) as f:
