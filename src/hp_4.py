@@ -6,37 +6,49 @@ from collections import defaultdict
 
 
 def reformat_dates(old_dates):
-    """Accepts a list of date strings in format yyyy-mm-dd, re-formats each
-    element to a format dd mmm yyyy--01 Jan 2001."""
-    pass
+   new_date = []
+   for date_str in old_dates:
+      dt = datetime.strptime(date_str, "%Y-%m-%d")
+      format_date = dt.strftime("%d %b %Y")
+      new_date.append(format_date)
+   return new_date
 
 
 def date_range(start, n):
-    """For input date string `start`, with format 'yyyy-mm-dd', returns
-    a list of of `n` datetime objects starting at `start` where each
-    element in the list is one day after the previous."""
-    pass
+    st_date = datetime.strptime(start, "%Y-%m-%d")
+    list_date = [st_date + timedelta(days=i) for i in range(n)]
+    return list_date
 
 
 def add_date_range(values, start_date):
-    """Adds a daily date range to the list `values` beginning with
-    `start_date`.  The date, value pairs are returned as tuples
-    in the returned list."""
-    pass
+    date_value_list = []
+    date_list = date_range(start_date, len(values))
+    for i, value in enumerate(values):
+        date_value_list.append((date_list[i], value))
+    return date_value_list
 
 
 def fees_report(infile, outfile):
-    """Calculates late fees per patron id and writes a summary report to
-    outfile."""
-    pass
-
-
-# The following main selection block will only run when you choose
-# "Run -> Module" in IDLE.  Use this section to run test code.  The
-# template code below tests the fees_report function.
-#
-# Use the get_data_file_path function to get the full path of any file
-# under the data directory.
+   late_fee_dict = defaultdict(float)
+   with open(infile, 'r') as file:
+      reader = DictReader(file)
+      for row in reader:
+         due_date = datetime.strptime(row['date_due'], "%m/%d/%Y")
+         return_date = datetime.strptime(row['date_returned'], "%m/%d/%Y")
+         if return_date > due_date:
+            late_day = (return_date - due_date).days
+            late_fee = round(late_day * 0.25, 2)
+            late_fee_dict[row['patron_id']] += late_fee
+         else:
+            late_fee_dict[row['patron_id']] = 0.00
+   with open(outfile, 'w', newline='') as file:
+      cols = ['patron_id', 'late_fees']
+      late_fee_list = []
+      for key, value in late_fee_dict.items():
+         late_fee_list.append({'patron_id': key, 'late_fees': "{:.2f}".format(value)})
+      writer = DictWriter(file, cols)
+      writer.writeheader()
+      writer.writerows(late_fee_list)
 
 if __name__ == '__main__':
     
