@@ -6,49 +6,49 @@ from collections import defaultdict
 
 
 def reformat_dates(old_dates):
-   new_dates = []
+   new_date = []
    for date_str in old_dates:
       dt = datetime.strptime(date_str, "%Y-%m-%d")
-      formatted_date = dt.strftime("%d %b %Y")
-      new_dates.append(formatted_date)
-   return new_dates
+      format_date = dt.strftime("%d %b %Y")
+      new_date.append(format_date)
+   return new_date
 
 
 def date_range(start, n):
-    start_date = datetime.strptime(start, "%Y-%m-%d")
-    date_list = [start_date + timedelta(days=i) for i in range(n)]
-    return date_list
+    st_date = datetime.strptime(start, "%Y-%m-%d")
+    list_date = [st_date + timedelta(days=i) for i in range(n)]
+    return list_date
 
 
 def add_date_range(values, start_date):
-    date_values = []
+    date_value_list = []
     date_list = date_range(start_date, len(values))
     for i, value in enumerate(values):
-        date_values.append((date_list[i], value))
-    return date_values
+        date_value_list.append((date_list[i], value))
+    return date_value_list
 
 
 def fees_report(infile, outfile):
-   late_fees_dict = defaultdict(float)
+   late_fee_dict = defaultdict(float)
    with open(infile, 'r') as file:
       reader = DictReader(file)
       for row in reader:
-         date_due = datetime.strptime(row['date_due'], "%m/%d/%Y")
-         date_returned = datetime.strptime(row['date_returned'], "%m/%d/%Y")
-         if date_returned > date_due:
-            days_late = (date_returned - date_due).days
+         due_date = datetime.strptime(row['date_due'], "%m/%d/%Y")
+         return_date = datetime.strptime(row['date_returned'], "%m/%d/%Y")
+         if return_date > due_date:
+            days_late = (return_date - due_date).days
             late_fee = round(days_late * 0.25, 2)
-            late_fees_dict[row['patron_id']] += late_fee
+            late_fee_dict[row['patron_id']] += late_fee
          else:
-            late_fees_dict[row['patron_id']] = 0.00
+            late_fee_dict[row['patron_id']] = 0.00
    with open(outfile, 'w', newline='') as file:
       cols = ['patron_id', 'late_fees']
-      late_fees_list = []
-      for key, value in late_fees_dict.items():
-         late_fees_list.append({'patron_id': key, 'late_fees': "{:.2f}".format(value)})
+      late_fee_list = []
+      for key, value in late_fee_dict.items():
+         late_fee_list.append({'patron_id': key, 'late_fees': "{:.2f}".format(value)})
       writer = DictWriter(file, cols)
       writer.writeheader()
-      writer.writerows(late_fees_list)
+      writer.writerows(late_fee_list)
 
 if __name__ == '__main__':
     
